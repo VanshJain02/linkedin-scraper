@@ -100,8 +100,8 @@ def save_job_to_firestore(job, firestore_client):
             send_jobs_to_webapp(job, WEBAPP_URL)
         except Exception as e:
             return
-    # else:
-        # print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
+    else:
+        print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
 # Run scraper for a single query-role pair
 async def run_single_scrape(query, role_type):
     print(f"[SCRAPE] Running for: {query} | {role_type}")
