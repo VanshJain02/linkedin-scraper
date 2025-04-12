@@ -140,6 +140,7 @@ async def run_single_scrape(query, role_type):
     # Remove the async def run_cron_scraper() and modify main:
 if __name__ == "__main__":
     # Single execution for cloud environments
+    print("Starting To Choose")
     queries = random.choice(JOB_QUERIES)
     for query, role in queries:
         asyncio.run(run_single_scrape(query, role))
