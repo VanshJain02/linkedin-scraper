@@ -19,12 +19,13 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libgbm-dev libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2
-        
+            
     - name: Install Python packages
       run: |
         python -m pip install --upgrade pip
-        pip install playwright google-cloud-firestore pytz requests beautifulsoup4
+        pip install firebase-admin playwright google-cloud-firestore pytz requests beautifulsoup4
         playwright install --with-deps chromium
+
 
     - name: Run Scraper
       env:
