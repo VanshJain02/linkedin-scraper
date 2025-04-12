@@ -11,8 +11,22 @@ from google.cloud import firestore
 # Add this before initializing Firestore client
 
 # Replace with environment variable usage
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "firebase-key.json"
-firestore_client = firestore.Client()
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Initialize Firebase with explicit credentials
+def initialize_firebase():
+    try:
+        cred = credentials.Certificate('firebase-key.json')
+        firebase_admin.initialize_app(cred)
+        return firestore.client()
+    except Exception as e:
+        print(f"Firebase initialization error: {str(e)}")
+        raise
+
+# Initialize Firestore client
+firestore_client = initialize_firebase()
+
 
 import requests
 import json
@@ -130,6 +144,8 @@ async def run_single_scrape(query, role_type):
     # asyncio.run(run_cron_scraper())
     # Remove the async def run_cron_scraper() and modify main:
 if __name__ == "__main__":
+    # Single execution for cloud environments
     queries = random.choice(JOB_QUERIES)
     for query, role in queries:
         asyncio.run(run_single_scrape(query, role))
+

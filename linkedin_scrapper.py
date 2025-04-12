@@ -3,7 +3,7 @@
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 import json
-
+import os
 
 
 def categorize_job_type(title: str, description: str = ""):
@@ -91,7 +91,7 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
     jobs = []
     if target_titles is None:
         target_titles = [query.lower()]
-
+    os.environ['PLAYWRIGHT_BROWSERS_PATH'] = '0'  # Use system browsers
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(storage_state="state.json")
