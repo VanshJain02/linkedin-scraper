@@ -1,0 +1,31 @@
+name: LinkedIn Scraper
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # Every 3 hours
+    - cron: '20 */4 * * *' # Every 4 hours + 20min offset
+    - cron: '45 */2 * * *' # Every 2 hours + 45min offset
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get install -y chromium
+        pip install -r requirements.txt
+        playwright install chromium
+
+    - name: Run Scraper
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS_JSON }}
+      run: |
+        echo "${{ secrets.FIREBASE_CREDENTIALS_JSON }}" > firebase-key.json
+        python main.py
