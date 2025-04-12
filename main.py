@@ -98,8 +98,8 @@ def save_job_to_firestore(job, firestore_client):
         WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyt0JL-X8sOlADABTWsPcMmWGaJmoOgRBAbJA9oqx_AAi_U8jGEnQPuEAbV8kMTvMyr0A/exec"
   
         # Send the jobs to the web app
-        response = send_jobs_to_webapp(job, WEBAPP_URL)
-        print(response)
+        # response = send_jobs_to_webapp(job, WEBAPP_URL)
+        # print(response)
     else:
         print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
 # Run scraper for a single query-role pair
