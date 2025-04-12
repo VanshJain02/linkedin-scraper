@@ -1,13 +1,12 @@
 name: LinkedIn Job Scraper
-
 on:
   schedule:
-    - cron: '*/5 * * * *' # Every 5 minutes for testing
+    - cron: '*/5 * * * *'  # Every 5 minutes for testing
   workflow_dispatch:
 
 jobs:
   scrape:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Explicitly specify Ubuntu 22.04
     timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
@@ -17,30 +16,39 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+            libnss3 \
+            libnspr4 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libcups2 \
+            libdrm2 \
+            libxkbcommon0 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxfixes3 \
+            libxrandr2
+
+    - name: Install Playwright components
+      uses: microsoft/playwright-github-action@v1.8.0  # Official Playwright action
+      with:
+        browsers: chromium
+
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install firebase-admin playwright pytz requests beautifulsoup4
 
-    - name: Install Playwright browsers and system dependencies
-      uses: microsoft/playwright-github-action@v1
-      with:
-        browsers: chromium
-
-    - name: Create Firebase Credentials
+    - name: Set up Firebase credentials
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
       run: |
-        echo "Validating JSON..."
-        python -c "import json, os; json.loads(os.environ['FIREBASE_CREDENTIALS'])"
-        
-        echo "Creating firebase-key.json..."
-        python -c "import json, os; f=open('firebase-key.json','w'); json.dump(json.loads(os.environ['FIREBASE_CREDENTIALS']), f, indent=2); f.close()"
-        
-        echo "File contents:"
-        cat firebase-key.json
-        echo -e "\nFile size: $(wc -c < firebase-key.json) bytes"
-        ls -la
+        python -c "import json, os; f=open('firebase-key.json','w'); f.write(os.environ['FIREBASE_CREDENTIALS'])"
+        echo "Firebase credentials:"
+        ls -l firebase-key.json
 
     - name: Run scraper
       run: |
