@@ -81,21 +81,21 @@ JOB_QUERIES = [[
 COLLECTION_NAME = "linkedin_jobs"
 
 # Function to check if job already exists based on URL
-async def job_exists(job_url):
-    docs = firestore_client.collection(COLLECTION_NAME).where("url", "==", job_url).stream()
-    return any(True for _ in docs)
+# async def job_exists(job_url):
+#     docs = firestore_client.collection(COLLECTION_NAME).where("url", "==", job_url).stream()
+#     return any(True for _ in docs)
 
 # Save job to Firestore
 async def save_job(job_data):
     firestore_client.collection(COLLECTION_NAME).add(job_data)
 def save_job_to_firestore(job, firestore_client):
     job_type = job.get("job_type", "Unknown").replace(" ", "-")
-    job_id = f"{job['title']}_{job['company']}_{job['location']}".replace(" ", "_").replace("/", "_")
+    job_id = f"{job['title']}_{job['company']}_{job['location']}_{job['url']}".replace(" ", "_").replace("/", "_")
     doc_ref = firestore_client.collection("jobs").document(job_type).collection("postings").document(job_id)
     if not doc_ref.get().exists:
         doc_ref.set(job)
         print(f"[+] Saved new job to Firestore: {job['title']} ({job_type})")
-        WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyt0JL-X8sOlADABTWsPcMmWGaJmoOgRBAbJA9oqx_AAi_U8jGEnQPuEAbV8kMTvMyr0A/exec"
+    # WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyt0JL-X8sOlADABTWsPcMmWGaJmoOgRBAbJA9oqx_AAi_U8jGEnQPuEAbV8kMTvMyr0A/exec"
   
         # Send the jobs to the web app
         # response = send_jobs_to_webapp(job, WEBAPP_URL)
@@ -108,9 +108,9 @@ async def run_single_scrape(query, role_type):
     jobs = await scrape_linkedin_jobs(query=query, location="United States", role_type_filter=role_type,limit=25)
 
     for job in jobs:
-        if await job_exists(job["url"]):
-            print(f"[SKIP] Duplicate job: {job['title']}")
-            continue
+        # if await job_exists(job["url"]):
+        #     print(f"[SKIP] Duplicate job: {job['title']}")
+        #     continue
 
         # Convert posting time to UTC and local time
         try:
