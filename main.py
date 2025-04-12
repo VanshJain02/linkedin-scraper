@@ -90,7 +90,7 @@ async def save_job(job_data):
     firestore_client.collection(COLLECTION_NAME).add(job_data)
 def save_job_to_firestore(job, firestore_client):
     job_type = job.get("job_type", "Unknown").replace(" ", "-")
-    job_id = f"{job['title']}_{job['company']}_{job['location']}_{job['url']}".replace(" ", "_").replace("/", "_")
+    job_id = f"{job['title']}_{job['company']}_{job['location']}".replace(" ", "_").replace("/", "_")
     doc_ref = firestore_client.collection("jobs").document(job_type).collection("postings").document(job_id)
     if not doc_ref.get().exists:
         doc_ref.set(job)
