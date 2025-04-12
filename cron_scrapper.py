@@ -9,8 +9,11 @@ import os
 from google.cloud import firestore
 
 # Add this before initializing Firestore client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/vansh/Desktop/resume_builder/backend/job_scrapper/firebase-service-account.json"
+# Remove this line
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/vansh/.../firebase-service-account.json"
 
+# Replace with environment variable usage
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "firebase-key.json"
 firestore_client = firestore.Client()
 
 import requests
