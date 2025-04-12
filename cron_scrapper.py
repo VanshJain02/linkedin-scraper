@@ -9,8 +9,6 @@ import os
 from google.cloud import firestore
 
 # Add this before initializing Firestore client
-# Remove this line
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/vansh/.../firebase-service-account.json"
 
 # Replace with environment variable usage
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "firebase-key.json"
@@ -87,7 +85,11 @@ def save_job_to_firestore(job, firestore_client):
     if not doc_ref.get().exists:
         doc_ref.set(job)
         print(f"[+] Saved new job to Firestore: {job['title']} ({job_type})")
-      
+        WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyt0JL-X8sOlADABTWsPcMmWGaJmoOgRBAbJA9oqx_AAi_U8jGEnQPuEAbV8kMTvMyr0A/exec"
+  
+        # Send the jobs to the web app
+        response = send_jobs_to_webapp(job, WEBAPP_URL)
+        print(response)
     else:
         print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
 # Run scraper for a single query-role pair
