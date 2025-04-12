@@ -30,16 +30,20 @@ jobs:
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
       run: |
-        echo "Validating JSON..."
-        python -c "import json, os; json.loads(os.environ['FIREBASE_CREDENTIALS'])"
+        # Write credentials with proper JSON formatting
+        python -c "import os,json; open('firebase-key.json','w').write(os.environ['FIREBASE_CREDENTIALS'])"
         
-        echo "Creating firebase-key.json..."
-        python -c "import json, os; f=open('firebase-key.json','w'); json.dump(json.loads(os.environ['FIREBASE_CREDENTIALS']), f, indent=2); f.close()"
+        # Verify credentials
+        echo "Firebase credentials validation:"
+        python -c "import json; json.load(open('firebase-key.json'))"
+        echo -e "\nFile structure:"
+        ls -la firebase-key.json
         
-        echo "File contents:"
+    - name: Debug Firebase Creds
+      run: |
+        echo "Credentials content:"
         cat firebase-key.json
-        echo -e "\nFile size: $(wc -c < firebase-key.json) bytes"
-        ls -la
+        echo -e "\nFile size: $(wc -c < firebase-key.json)"
 
     # - name: Create Firebase Credentials
     #   env:

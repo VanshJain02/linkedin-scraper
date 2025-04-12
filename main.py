@@ -9,15 +9,16 @@ from linkedin_scrapper import scrape_linkedin_jobs, convert_posted_time_to_datet
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Initialize Firebase with explicit credentials
 def initialize_firebase():
     try:
-        cred = credentials.Certificate('firebase-key.json')
-        firebase_admin.initialize_app(cred)
+        if not firebase_admin._apps:
+            cred = credentials.Certificate('firebase-key.json')
+            firebase_admin.initialize_app(cred)
         return firestore.client()
     except Exception as e:
         print(f"Firebase initialization error: {str(e)}")
         raise
+
 
 # Initialize Firestore client
 firestore_client = initialize_firebase()
