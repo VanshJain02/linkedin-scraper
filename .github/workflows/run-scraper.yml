@@ -1,12 +1,13 @@
 name: LinkedIn Job Scraper
+
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes for testing
+    - cron: '*/5 * * * *' # Every 5 minutes for testing
   workflow_dispatch:
 
 jobs:
   scrape:
-    runs-on: ubuntu-22.04  # Explicitly specify Ubuntu 22.04
+    runs-on: ubuntu-22.04  # Change from ubuntu-latest
     timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
@@ -15,40 +16,72 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-
     - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-            libnss3 \
-            libnspr4 \
-            libatk1.0-0 \
+            ca-certificates \
+            fonts-liberation \
+            libasound2 \
             libatk-bridge2.0-0 \
+            libatk1.0-0 \
+            libc6 \
+            libcairo2 \
             libcups2 \
-            libdrm2 \
-            libxkbcommon0 \
+            libdbus-1-3 \
+            libexpat1 \
+            libfontconfig1 \
+            libgbm1 \
+            libgcc1 \
+            libglib2.0-0 \
+            libgtk-3-0 \
+            libnspr4 \
+            libnss3 \
+            libpango-1.0-0 \
+            libpangocairo-1.0-0 \
+            libstdc++6 \
+            libx11-6 \
+            libx11-xcb1 \
+            libxcb1 \
             libxcomposite1 \
+            libxcursor1 \
             libxdamage1 \
+            libxext6 \
             libxfixes3 \
-            libxrandr2
-
-    - name: Install Playwright components
-      uses: microsoft/playwright-github-action@v1.8.0  # Official Playwright action
-      with:
-        browsers: chromium
+            libxi6 \
+            libxrandr2 \
+            libxrender1 \
+            libxss1 \
+            libxtst6 \
+            lsb-release \
+            wget \
+            xdg-utils
 
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install firebase-admin playwright pytz requests beautifulsoup4
 
-    - name: Set up Firebase credentials
+    - name: Install Playwright browsers and system dependencies
+      uses: microsoft/playwright-github-action@v1
+      with:
+        browsers: chromium
+      
+
+    - name: Create Firebase Credentials
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
       run: |
-        python -c "import json, os; f=open('firebase-key.json','w'); f.write(os.environ['FIREBASE_CREDENTIALS'])"
-        echo "Firebase credentials:"
-        ls -l firebase-key.json
+        echo "Validating JSON..."
+        python -c "import json, os; json.loads(os.environ['FIREBASE_CREDENTIALS'])"
+        
+        echo "Creating firebase-key.json..."
+        python -c "import json, os; f=open('firebase-key.json','w'); json.dump(json.loads(os.environ['FIREBASE_CREDENTIALS']), f, indent=2); f.close()"
+        
+        echo "File contents:"
+        cat firebase-key.json
+        echo -e "\nFile size: $(wc -c < firebase-key.json) bytes"
+        ls -la
 
     - name: Run scraper
       run: |
