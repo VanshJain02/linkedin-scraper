@@ -2,13 +2,13 @@ name: LinkedIn Job Scraper
 
 on:
   schedule:
-    - cron: '*/45 * * * *'
+    - cron: '*/59 * * * *'
   workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-22.04  # Critical: Use supported LTS version
-    timeout-minutes: 40
+    timeout-minutes: 56
     steps:
     - uses: actions/checkout@v4
 
