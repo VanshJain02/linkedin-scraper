@@ -27,13 +27,17 @@ jobs:
         pip install firebase-admin playwright pytz requests beautifulsoup4
         playwright install --with-deps chromium
 
+    - name: Debug Firebase Key
+      run: |
+        cat firebase-key.json
+        echo "File length: $(wc -c < firebase-key.json)"
 
 
     - name: Run Scraper
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
       run: |
-        # Convert escaped newlines to actual newlines
-        echo "$FIREBASE_CREDENTIALS" | sed 's/\\n/\n/g' > firebase-key.json
+        python -c "import json, os; f=open('firebase-key.json','w'); json.dump(json.loads(os.environ['FIREBASE_CREDENTIALS']), f); f.close()"
         python main.py
+
 
