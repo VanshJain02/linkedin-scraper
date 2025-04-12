@@ -1,6 +1,5 @@
-playwright
-google-cloud-firestore
-pytz
-requests
-beautifulsoup4
-firebase-admin  # Added this line
+playwright==1.42.0
+beautifulsoup4==4.12.3
+pytz==2024.1
+firebase-admin==6.2.0
+requests==2.31.0
