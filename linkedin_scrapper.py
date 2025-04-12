@@ -138,7 +138,7 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
                     job_location = await location_el.inner_text() if location_el else "[NOT FOUND]"
                     job_url = await link_el.get_attribute("href") if link_el else ""
 
-                    # print(f"[{collected + 1}] {title} | {company} | {location} | {job_url}")
+                    print(f"[{collected + 1}] {title} | {company} | {location} | {job_url}")
 
                     if True:
                         job_page = await context.new_page()
