@@ -3,3 +3,4 @@ google-cloud-firestore
 pytz
 requests
 beautifulsoup4
+firebase-admin  # Added this line

@@ -2,15 +2,10 @@ import asyncio
 import random
 import pytz
 from datetime import datetime, timedelta
-from google.cloud import firestore
 
 from linkedin_scrapper import scrape_linkedin_jobs, convert_posted_time_to_datetime, format_posted_time_local  # Reuse your defined scraper logic
-import os
-from google.cloud import firestore
 
-# Add this before initializing Firestore client
 
-# Replace with environment variable usage
 import firebase_admin
 from firebase_admin import credentials, firestore
 
