@@ -2,7 +2,7 @@ name: LinkedIn Job Scraper
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/45 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -20,17 +20,14 @@ jobs:
     - name: Random interval control
       id: random
       run: |
-        # Generate random number (0, 1, or 2)
+        # Generate random number (0, 1)
         # Adjust probabilities by changing the modulus and conditions
-        RAND=$(( $RANDOM % 3 ))
+        RAND=$(( $RANDOM % 2 ))
         if [ $RAND -eq 0 ]; then
-          echo "Proceeding (30m interval)"
+          echo "Proceeding (45m interval)"
           echo "run_job=true" >> $GITHUB_OUTPUT
-        elif [ $RAND -eq 1 ]; then
-          echo "Skipping to next slot (60m interval)"
-          echo "run_job=false" >> $GITHUB_OUTPUT
         else
-          echo "Skipping two slots (120m interval)"
+          echo "Skipping to next slot (90m interval)"
           echo "run_job=false" >> $GITHUB_OUTPUT
         fi
 
@@ -59,21 +56,6 @@ jobs:
         python -c "import json; json.load(open('firebase-key.json'))"
         echo -e "\nFile structure:"
         ls -la firebase-key.json
-
-    - name: Debug Firebase Creds
-      if: steps.random.outputs.run_job == 'true'
-
-      run: |
-        echo "Credentials content:"
-        cat firebase-key.json
-        echo -e "\nFile size: $(wc -c < firebase-key.json)"
-
-    # - name: Create Firebase Credentials
-    #   env:
-    #     FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
-    #   run: |
-    #     echo "$FIREBASE_CREDENTIALS" > firebase-key.json
-
     - name: Run scraper
       if: steps.random.outputs.run_job == 'true'
       run: |

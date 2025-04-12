@@ -94,14 +94,14 @@ def save_job_to_firestore(job, firestore_client):
     doc_ref = firestore_client.collection("jobs").document(job_type).collection("postings").document(job_id)
     if not doc_ref.get().exists:
         doc_ref.set(job)
-        print(f"[+] Saved new job to Firestore: {job['title']} ({job_type})")
+        print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']} | {job_type}")
         WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"
-  
-        # Send the jobs to the web app
-        response = send_jobs_to_webapp(job, WEBAPP_URL)
-        print(response)
-    else:
-        print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
+        try:
+            send_jobs_to_webapp(job, WEBAPP_URL)
+        except Exception as e:
+            return
+    # else:
+        # print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
 # Run scraper for a single query-role pair
 async def run_single_scrape(query, role_type):
     print(f"[SCRAPE] Running for: {query} | {role_type}")
@@ -122,7 +122,7 @@ async def run_single_scrape(query, role_type):
 
         save_job_to_firestore(job, firestore_client)
 
-        print(f"[SAVED] {job['title']} | {job['company']}")
+        # print(f"[SAVED] {job['title']} | {job['company']}")
 
 # Random cron runner
 # async def run_cron_scraper():
@@ -141,7 +141,6 @@ async def run_single_scrape(query, role_type):
     # Remove the async def run_cron_scraper() and modify main:
 if __name__ == "__main__":
     # Single execution for cloud environments
-    print("Starting To Choose")
     queries = random.choice(JOB_QUERIES)
     for query, role in queries:
         asyncio.run(run_single_scrape(query, role))
