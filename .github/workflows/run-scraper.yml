@@ -2,7 +2,7 @@ name: LinkedIn Job Scraper
 
 on:
   schedule:
-    - cron: '0 */1 * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,6 +16,23 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
+
+    - name: Random interval control
+      id: random
+      run: |
+        # Generate random number (0, 1, or 2)
+        # Adjust probabilities by changing the modulus and conditions
+        RAND=$(( $RANDOM % 3 ))
+        if [ $RAND -eq 0 ]; then
+          echo "Proceeding (30m interval)"
+          echo "run_job=true" >> $GITHUB_OUTPUT
+        elif [ $RAND -eq 1 ]; then
+          echo "Skipping to next slot (60m interval)"
+          echo "run_job=false" >> $GITHUB_OUTPUT
+        else
+          echo "Skipping two slots (120m interval)"
+          echo "run_job=false" >> $GITHUB_OUTPUT
+        fi
 
     - name: Install dependencies
       run: |
