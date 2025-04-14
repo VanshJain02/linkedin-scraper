@@ -199,3 +199,18 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
 
         await browser.close()
     return jobs
+
+
+import asyncio
+
+if __name__ == "__main__":
+    async def main():
+        jobs = await scrape_linkedin_jobs(
+            query="software engineer",
+            location="United States",
+            limit=5,  # For testing purposes
+            role_type_filter="Internship"  # Optional
+        )
+        print(json.dumps(jobs, indent=2))
+
+    asyncio.run(main())
