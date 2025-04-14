@@ -22,13 +22,13 @@ jobs:
       run: |
         # Generate random number (0, 1)
         # Adjust probabilities by changing the modulus and conditions
-        RAND=$(( $RANDOM % 2 ))
-        if [ $RAND -eq 0 ]; then
-          echo "Proceeding (45m interval)"
-          echo "run_job=true" >> $GITHUB_OUTPUT
-        else
-          echo "Skipping to next slot (90m interval)"
+        RAND=$(( RANDOM % 3 ))
+        if [ "$RAND" -eq 0 ]; then
+          echo "Skipping to next slot (45m interval)"
           echo "run_job=false" >> $GITHUB_OUTPUT
+        else
+          echo "Proceeding (90m interval)"
+          echo "run_job=true" >> $GITHUB_OUTPUT
         fi
 
     - name: Install dependencies
