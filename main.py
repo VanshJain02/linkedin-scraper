@@ -95,11 +95,11 @@ def save_job_to_firestore(job, firestore_client):
     if not doc_ref.get().exists:
         doc_ref.set(job)
         print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']} | {job_type}")
-        WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"
-        try:
-            send_jobs_to_webapp(job, WEBAPP_URL)
-        except Exception as e:
-            return
+        # WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"
+        # try:
+        #     send_jobs_to_webapp(job, WEBAPP_URL)
+        # except Exception as e:
+        #     return
     else:
         print(f"[=] Skipped duplicate job: {job['title']} ({job_type})")
 # Run scraper for a single query-role pair
