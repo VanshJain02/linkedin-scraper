@@ -2,7 +2,7 @@ name: LinkedIn Job Scraper
 
 on:
   schedule:
-    - cron: '*/55 * * * *'
+    - cron: '*/30 */1 * * *'
   workflow_dispatch:
 
 jobs:
@@ -17,33 +17,33 @@ jobs:
       with:
         python-version: '3.10'
 
-    # - name: Random interval control
-    #   id: random
-    #   run: |
-    #     # Generate random number (0, 1)
-    #     # Adjust probabilities by changing the modulus and conditions
-    #     RAND=$(( $RANDOM % 2 ))
-    #     if [ $RAND -eq 0 ]; then
-    #       echo "Proceeding (45m interval)"
-    #       echo "run_job=true" >> $GITHUB_OUTPUT
-    #     else
-    #       echo "Skipping to next slot (90m interval)"
-    #       echo "run_job=false" >> $GITHUB_OUTPUT
-    #     fi
+    - name: Random interval control
+      id: random
+      run: |
+        # Generate random number (0, 1)
+        # Adjust probabilities by changing the modulus and conditions
+        RAND=$(( $RANDOM % 2 ))
+        if [ $RAND -eq 0 ]; then
+          echo "Proceeding (45m interval)"
+          echo "run_job=true" >> $GITHUB_OUTPUT
+        else
+          echo "Skipping to next slot (90m interval)"
+          echo "run_job=false" >> $GITHUB_OUTPUT
+        fi
 
     - name: Install dependencies
-      # if: steps.random.outputs.run_job == 'true'
+      if: steps.random.outputs.run_job == 'true'
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Install Playwright
-      # if: steps.random.outputs.run_job == 'true'
+      if: steps.random.outputs.run_job == 'true'
       run: |
         playwright install --with-deps chromium
         playwright install chromium
     - name: Create Firebase Credentials
-      # if: steps.random.outputs.run_job == 'true'
+      if: steps.random.outputs.run_job == 'true'
 
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
@@ -57,6 +57,6 @@ jobs:
         echo -e "\nFile structure:"
         ls -la firebase-key.json
     - name: Run scraper
-      # if: steps.random.outputs.run_job == 'true'
+      if: steps.random.outputs.run_job == 'true'
       run: |
         python main.py
