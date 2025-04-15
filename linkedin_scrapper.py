@@ -116,7 +116,9 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
                 print("[WARN] No job cards found on page", start // 25 + 1)
                 break
 
-            job_cards = await page.query_selector_all("li.ember-view[data-occludable-job-id]")
+            job_cards = await page.query_selector_all(
+                "li.ember-view[data-occludable-job-id], li.ember-view div[data-job-id]"
+            )
 
             print(f"[INFO] Page {(start // 25) + 1}: Found {len(job_cards)} job cards.")
 
