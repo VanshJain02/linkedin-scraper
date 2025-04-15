@@ -2,10 +2,12 @@ import json
 import random
 import time
 import re
+import firebase_admin
 from playwright.sync_api import sync_playwright
 from supabase import create_client, Client
 from firebase_admin import credentials, initialize_app
 from firebase_admin import firestore
+
 import re
 from urllib.parse import quote
 
