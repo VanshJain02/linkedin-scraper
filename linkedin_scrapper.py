@@ -176,8 +176,8 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
 
                         job_type = categorize_job_type(title, description)
                         # print("Type:", job_type)
-                        if role_type_filter and job_type.lower() != role_type_filter.lower():
-                            continue
+                        # if role_type_filter and job_type.lower() != role_type_filter.lower():
+                        #     continue
 
                         jobs.append({
                             "title": title.strip(),

@@ -67,11 +67,14 @@ JOB_QUERIES = [[
     ("full stack developer intern", "Internship"),
     ("frontend developer intern", "Internship"),
     ("data scientist intern", "Internship"),
+    ('"software" "intern"', "Internship"),
+    ('"software" "developer"', "Internship"),
     ("software engineer intern", "Internship"),
     ("software development engineer intern", "Internship")],[
     ("frontend developer", "Full-time"),
 ("software development engineer", "Full-time"),
     ("software developer", "Full-time"),
+    ('"software"', "Full-time"),
     ("software engineer", "Full-time"),
     ("frontend developer", "Full-time"),
     ("backend developer", "Full-time")]
@@ -121,7 +124,7 @@ def save_job_to_firestore(job, firestore_client):
 async def run_single_scrape(query, role_type):
     print(f"[SCRAPE] Running for: {query} | {role_type}")
     apply_filter_bool = random.choice([True,False])
-    limit_option = random.choice([25,40])
+    limit_option = random.choice([40,60])
 
     jobs = await scrape_linkedin_jobs(query=query, location="United States", role_type_filter=role_type,limit=limit_option,apply_job_type_filter=apply_filter_bool)
 
