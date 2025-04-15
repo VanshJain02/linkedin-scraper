@@ -99,6 +99,16 @@ def save_job_to_firestore(job, firestore_client):
     doc_ref = firestore_client.collection("jobs").document(job_id)
     if not doc_ref.get().exists:
         doc_ref.set(job_data)
+        normalized_name = job_data['company'].strip().lower()
+        company_ref = firestore_client.collection('companies').document(normalized_name)
+        if not company_ref.get().exists:
+            company_ref.set({
+                'display_name': job_data['company'].title(),
+                'first_seen': firestore.SERVER_TIMESTAMP,
+                'last_updated': firestore.SERVER_TIMESTAMP
+            })
+            print(f"Added new company: {normalized_name}")
+
         print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']}")
         # WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"
         # try:
