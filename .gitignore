@@ -2,6 +2,7 @@
 firebase-service-account.json
 firebase-key.json
 .env
+.gitignore
 service-account.json
 state_main.json
 companyinfo_scrapper.py
