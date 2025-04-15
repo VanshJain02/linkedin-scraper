@@ -59,6 +59,13 @@ def send_jobs_to_webapp(jobs_data, webapp_url):
 
 # Define your target queries and role type filters
 JOB_QUERIES = [[
+    ("frontend developer", "Full-time"),
+("software development engineer", "Full-time"),
+    ("software developer", "Full-time"),
+    ("software engineer", "Full-time"),
+    ("frontend developer", "Full-time"),
+    ("backend developer", "Full-time")],
+    [
     ("sde intern", "Internship"),
     ("software developer intern", "Internship"),
     ("machine learning intern", "Internship"),
@@ -66,17 +73,9 @@ JOB_QUERIES = [[
     ("full stack developer intern", "Internship"),
     ("frontend developer intern", "Internship"),
     ("data scientist intern", "Internship"),
-    ('"software" "intern"', "Internship"),
     ('"software" "developer"', "Internship"),
     ("software engineer intern", "Internship"),
-    ("software development engineer intern", "Internship")],[
-    ("frontend developer", "Full-time"),
-("software development engineer", "Full-time"),
-    ("software developer", "Full-time"),
-    ('"software"', "Full-time"),
-    ("software engineer", "Full-time"),
-    ("frontend developer", "Full-time"),
-    ("backend developer", "Full-time")]
+    ("software development engineer intern", "Internship")]
 ]
 
 # Define your collection
