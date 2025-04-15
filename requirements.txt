@@ -3,3 +3,4 @@ beautifulsoup4==4.12.3
 pytz==2024.1
 firebase-admin==6.2.0
 requests==2.31.0
+supabase
