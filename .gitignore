@@ -2,4 +2,7 @@
 firebase-service-account.json
 firebase-key.json
 .env
+service-account.json
+state_main.json
+companyinfo_scrapper.py
 *.key
