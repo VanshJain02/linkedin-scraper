@@ -128,7 +128,7 @@ def save_job_to_firestore(job, firestore_client):
 async def run_single_scrape(query, role_type):
     print(f"[SCRAPE] Running for: {query} | {role_type}")
     apply_filter_bool = random.choice([True,False])
-    limit_option = random.choice([40,60])
+    limit_option = random.choice([30,40])
 
     jobs = await scrape_linkedin_jobs(query=query, location="United States", role_type_filter=role_type,limit=limit_option,apply_job_type_filter=apply_filter_bool)
 
