@@ -455,22 +455,41 @@ def format_linkedin_company_url(company_name):
     # URL encode special characters
     return f"{quote(formatted)}"
 
-
-def scrape_referral_profile(company):
-    formatted_company_names = format_linkedin_company_url(company)
-    existing_check = supabase.table("companies") \
-            .select("id") \
-            .eq("name", formatted_company_names.lower()) \
-            .execute()
+# Modified scrape_referral_profile function
+def scrape_referral_profile(normalized_name, original_name):
+    """Scrape company referrals with proper resource isolation"""
+    try:
+        # Reinitialize Firebase for this process
+        if not firebase_admin._apps:
+            cred = credentials.Certificate('service-account.json')
+            firebase_admin.initialize_app(cred)
         
-    if len(existing_check.data) > 0:
-        print(f"Company {formatted_company_names} already exists in database. Skipping...")
-        return
-        
-    print(f"\nStarting scrape for {formatted_company_names}")
-    profiles = scrape_company_profiles(formatted_company_names)
-    print(f"Scraped {len(profiles)} profiles")
+        # Reinitialize Supabase
+        supabase = create_client(os.environ['SUPABASE_URL'], 
+                               os.environ['SUPABASE_SERVICE_KEY'])
 
+        print(f"\nStarting deep scrape for {original_name}")
+        profiles = scrape_company_profiles(original_name)  # Use original name
+        
+        if profiles:
+            print(f"Discovered {len(profiles)} profiles for {original_name}")
+            # Delete old entries
+            existing = supabase.table("companies").select("id").eq("name", normalized_name).execute()
+            if existing.data:
+                supabase.table("people").delete().eq("company_id", existing.data[0]['id']).execute()
+            
+            # Insert new profiles
+            supabase.table("people").insert(profiles).execute()
+            print(f"Updated {len(profiles)} profiles for {original_name}")
+        else:
+            print(f"No profiles found for {original_name}")
+            supabase.table("companies").delete().eq("name", normalized_name).execute()
+            print(f"Cleaned up company record for {original_name}")
+
+    except Exception as e:
+        print(f"REFERRAL SCRAPE ERROR ({original_name}): {str(e)}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":

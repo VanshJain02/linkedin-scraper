@@ -112,9 +112,12 @@ def save_job_to_firestore(job, firestore_client):
             try:
                 print(f"Starting referral scrape for {normalized_name}")
 
-                import threading
-                t = threading.Thread(target=scrape_referral_profile, args=(normalized_name,))
-                t.start
+                import multiprocessing
+                p = multiprocessing.Process(
+                    target=scrape_referral_profile,
+                    args=(normalized_name, job_data['company'])
+                )
+                p.start()
                 # scrape_referral_profile(normalized_name)  # Make sure this function is imported/defined
             except Exception as e:
                 print(f"Failed to scrape referrals: {str(e)}")
