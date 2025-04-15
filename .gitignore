@@ -6,5 +6,4 @@ firebase-key.json
 service-account.json
 createStateJson.py
 state_main.json
-companyinfo_scrapper.py
 *.key

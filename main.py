@@ -2,9 +2,8 @@ import asyncio
 import random
 import pytz
 from datetime import datetime, timedelta
-
 from linkedin_scrapper import scrape_linkedin_jobs, convert_posted_time_to_datetime, format_posted_time_local  # Reuse your defined scraper logic
-
+from companyinfo_scrapper import scrape_referral_profile 
 
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -12,7 +11,7 @@ from firebase_admin import credentials, firestore
 def initialize_firebase():
     try:
         if not firebase_admin._apps:
-            cred = credentials.Certificate('firebase-key.json')
+            cred = credentials.Certificate('service-account.json')
             firebase_admin.initialize_app(cred)
         return firestore.client()
     except Exception as e:
@@ -111,6 +110,11 @@ def save_job_to_firestore(job, firestore_client):
                 'last_updated': firestore.SERVER_TIMESTAMP
             })
             print(f"Added new company: {normalized_name}")
+            try:
+                print(f"Starting referral scrape for {normalized_name}")
+                scrape_referral_profile(normalized_name)  # Make sure this function is imported/defined
+            except Exception as e:
+                print(f"Failed to scrape referrals: {str(e)}")
 
         print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']}")
         # WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"

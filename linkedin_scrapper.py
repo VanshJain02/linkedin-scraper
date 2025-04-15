@@ -92,7 +92,7 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
     if target_titles is None:
         target_titles = [query.lower()]
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(headless=False)
         context = await browser.new_context(storage_state="state.json")
         page = await context.new_page()
 
@@ -212,8 +212,8 @@ if __name__ == "__main__":
         jobs = await scrape_linkedin_jobs(
             query="software engineer",
             location="United States",
-            limit=5,  # For testing purposes
-            role_type_filter="Internship"  # Optional
+            limit=40,  # For testing purposes
+            role_type_filter="Full-time"  # Optional
         )
         print(json.dumps(jobs, indent=2))
 

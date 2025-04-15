@@ -7,7 +7,7 @@ on:
 
 jobs:
   scrape:
-    runs-on: ubuntu-22.04  # Critical: Use supported LTS version
+    runs-on: ubuntu-22.04
     timeout-minutes: 50
     steps:
     - uses: actions/checkout@v4
@@ -20,14 +20,10 @@ jobs:
     - name: Random interval control
       id: random
       run: |
-        # Generate random number (0, 1)
-        # Adjust probabilities by changing the modulus and conditions
         RAND=$(( RANDOM % 3 ))
         if [ "$RAND" -eq 0 ]; then
-          echo "Skipping to next slot (45m interval)"
           echo "run_job=false" >> $GITHUB_OUTPUT
         else
-          echo "Proceeding (90m interval)"
           echo "run_job=true" >> $GITHUB_OUTPUT
         fi
 
@@ -41,22 +37,27 @@ jobs:
       if: steps.random.outputs.run_job == 'true'
       run: |
         playwright install --with-deps chromium
-        playwright install chromium
+
     - name: Create Firebase Credentials
       if: steps.random.outputs.run_job == 'true'
-
       env:
         FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
       run: |
-        # Write credentials with proper JSON formatting
-        python -c "import os,json; open('firebase-key.json','w').write(os.environ['FIREBASE_CREDENTIALS'])"
-        
-        # Verify credentials
-        echo "Firebase credentials validation:"
-        python -c "import json; json.load(open('firebase-key.json'))"
-        echo -e "\nFile structure:"
-        ls -la firebase-key.json
+        echo "$FIREBASE_CREDENTIALS" > service-account.json
+        echo "Firebase credentials created"
+
+    - name: Create LinkedIn Session State
+      if: steps.random.outputs.run_job == 'true'
+      env:
+        LINKEDIN_SESSION: ${{ secrets.LINKEDIN_SESSION_STATE }}
+      run: |
+        echo "$LINKEDIN_SESSION" > state_main.json
+        echo "LinkedIn session state created"
+
     - name: Run scraper
       if: steps.random.outputs.run_job == 'true'
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       run: |
         python main.py
