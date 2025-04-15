@@ -187,7 +187,7 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
                             "location": job_location.strip(),
                             "url": f"https://www.linkedin.com{job_url}" if job_url.startswith("/") else job_url,
                             "posted": posted_time,
-                            "job_type": job_type,
+                            "type": job_type,
                             "description": description.strip()
                         })
                         

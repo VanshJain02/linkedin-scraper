@@ -89,12 +89,17 @@ COLLECTION_NAME = "linkedin_jobs"
 async def save_job(job_data):
     firestore_client.collection(COLLECTION_NAME).add(job_data)
 def save_job_to_firestore(job, firestore_client):
-    job_type = job.get("job_type", "Unknown").replace(" ", "-")
+    job_type = job.get("type", "Unknown").replace(" ", "-")
     job_id = f"{job['title']}_{job['company']}_{job['location']}".replace(" ", "_").replace("/", "_")
-    doc_ref = firestore_client.collection("jobs").document(job_type).collection("postings").document(job_id)
+    job_data = {
+        **job,
+        "timestamp": firestore.SERVER_TIMESTAMP
+    }
+    
+    doc_ref = firestore_client.collection("jobs").document(job_id)
     if not doc_ref.get().exists:
-        doc_ref.set(job)
-        print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']} | {job_type}")
+        doc_ref.set(job_data)
+        print(f"[+] Saved new job to Firestore: {job['title']} | {job['company']}")
         # WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSOLJuSHVnEPzjFuxC4zcMfxJbxLoWKMkk96Yc64uImj4qeNCurvC-v6Lcc6MNy6WecA/exec"
         # try:
         #     send_jobs_to_webapp(job, WEBAPP_URL)
