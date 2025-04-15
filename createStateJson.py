@@ -1,6 +1,8 @@
 import asyncio
 from playwright.async_api import async_playwright
 
+
+
 async def save_login_state():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)  # Open visible browser so you can log in
@@ -15,5 +17,6 @@ async def save_login_state():
         await context.storage_state(path="state_main.json")
         print("✅ Login saved to state.json.")
         await browser.close()
+
 
 asyncio.run(save_login_state())

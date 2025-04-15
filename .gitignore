@@ -4,6 +4,7 @@ firebase-key.json
 .env
 .gitignore
 service-account.json
+createStateJson.py
 state_main.json
 companyinfo_scrapper.py
 *.key
