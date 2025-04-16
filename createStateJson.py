@@ -6,7 +6,8 @@ import sys
 
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
-
+LINKEDIN_EMAIL="tekhnite@gmail.com"
+LINKEDIN_PASSWORD="vanshdilip1@"
 if not LINKEDIN_EMAIL or not LINKEDIN_PASSWORD:
     print("❌ LinkedIn credentials are missing. Did you set LINKEDIN_EMAIL and LINKEDIN_PASSWORD as env vars?")
     sys.exit(1)
@@ -32,14 +33,16 @@ async def auto_save_login_state():
 
         # Click the login button
         await page.click('button[type="submit"]')
+        try:
+            # Wait for navigation to ensure login is successful
+            await page.wait_for_url("https://www.linkedin.com/feed/", timeout=15000)
 
-        # Wait for navigation to ensure login is successful
-        await page.wait_for_url("https://www.linkedin.com/feed/", timeout=15000)
-
-        # Save the authenticated session
-        await context.storage_state(path="state.json")
-        print("✅ Login successful and state saved to state.json.")
-        await browser.close()
+            # Save the authenticated session
+            await context.storage_state(path="state.json")
+            print("✅ Login successful and state saved to state.json.")
+            await browser.close()
+        except Exception as e:
+            print(f"❌ Login failed: {e}")
 
 
 async def save_login_state():
