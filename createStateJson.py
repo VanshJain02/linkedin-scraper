@@ -1,38 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
 
-LINKEDIN_EMAIL = "tekhnite@gmail.com"
-LINKEDIN_PASSWORD = "vanshdilip1@"
-
-async def auto_save_login_state():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
-        context = await browser.new_context()
-        page = await context.new_page()
-
-        await page.goto("https://www.linkedin.com/login")
-
-        # Fill in the username and password
-        await page.fill('input#username', LINKEDIN_EMAIL)
-        await page.fill('input#password', LINKEDIN_PASSWORD)
-
-        # Make sure "Remember me" is checked
-        remember_checkbox = await page.query_selector('input#rememberMeOptIn-checkbox')
-        if remember_checkbox:
-            is_checked = await remember_checkbox.is_checked()
-            if not is_checked:
-                await remember_checkbox.check()
-
-        # Click the login button
-        await page.click('button[type="submit"]')
-
-        # Wait for navigation to ensure login is successful
-        await page.wait_for_url("https://www.linkedin.com/feed/", timeout=15000)
-
-        # Save the authenticated session
-        await context.storage_state(path="state.json")
-        print("✅ Login successful and state saved to state.json.")
-        await browser.close()
 
 
 async def save_login_state():
