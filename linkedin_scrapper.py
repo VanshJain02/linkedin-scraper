@@ -173,6 +173,7 @@ async def scrape_linkedin_jobs(query="software engineer", location="India", targ
 
                         except:
                             print("[WARN] Primary HTML description fetch failed.")
+                            pass
                        
                         await job_page.close()
 
