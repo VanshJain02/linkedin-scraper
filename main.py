@@ -141,23 +141,25 @@ async def run_single_scrape(query, role_type):
     print(f"[SCRAPE] Running for: {query} | {role_type}")
     apply_filter_bool = random.choice([True,False])
     limit_option = random.choice([30,40])
+    try:
+        jobs = await scrape_linkedin_jobs(query=query, location="United States", role_type_filter=role_type,limit=limit_option,apply_job_type_filter=apply_filter_bool)
+        for job in jobs:
+            # if await job_exists(job["url"]):
+            #     print(f"[SKIP] Duplicate job: {job['title']}")
+            #     continue
 
-    jobs = await scrape_linkedin_jobs(query=query, location="United States", role_type_filter=role_type,limit=limit_option,apply_job_type_filter=apply_filter_bool)
+            # Convert posting time to UTC and local time
+            try:
+                utc_time = convert_posted_time_to_datetime(job["posted"])
+                job["posted"] = utc_time.isoformat()
+                job["posted_local"] = format_posted_time_local(utc_time, timezone_str="America/New_York")
+            except:
+                job["posted_local"] = job["posted"]
 
-    for job in jobs:
-        # if await job_exists(job["url"]):
-        #     print(f"[SKIP] Duplicate job: {job['title']}")
-        #     continue
-
-        # Convert posting time to UTC and local time
-        try:
-            utc_time = convert_posted_time_to_datetime(job["posted"])
-            job["posted"] = utc_time.isoformat()
-            job["posted_local"] = format_posted_time_local(utc_time, timezone_str="America/New_York")
-        except:
-            job["posted_local"] = job["posted"]
-
-        save_job_to_firestore(job, firestore_client)
+            save_job_to_firestore(job, firestore_client)
+    except Exception as e:
+        print("ERROR: ",str(e))
+        return
 
         # print(f"[SAVED] {job['title']} | {job['company']}")
 
