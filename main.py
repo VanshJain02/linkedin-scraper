@@ -101,6 +101,12 @@ def save_job_to_firestore(job, firestore_client):
     if not doc_ref.get().exists:
         doc_ref.set(job_data)
         normalized_name = job_data['company'].strip().lower()
+         # Prevent empty company names
+        company_name = job_data.get('company', '').strip()
+        if not company_name:
+            print(f"[!] Skipping company entry due to missing name: {job_data}")
+            return
+        
         company_ref = firestore_client.collection('companies').document(normalized_name)
         if not company_ref.get().exists:
             company_ref.set({
