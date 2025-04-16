@@ -7,7 +7,7 @@ LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
 
 async def auto_save_login_state():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=True)
         context = await browser.new_context()
         page = await context.new_page()
 
