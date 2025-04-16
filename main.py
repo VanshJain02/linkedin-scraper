@@ -179,7 +179,7 @@ async def run_single_scrape(query, role_type):
 if __name__ == "__main__":
     # Single execution for cloud environments
     queries = random.choice(JOB_QUERIES)
-    for queries in queries:
-        for query, role in queries:
-            asyncio.run(run_single_scrape(query, role))
+    # for queries in queries:
+    for query, role in queries:
+        asyncio.run(run_single_scrape(query, role))
 
