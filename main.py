@@ -174,7 +174,7 @@ async def run_single_scrape(query, role_type):
 if __name__ == "__main__":
     # Single execution for cloud environments
     # queries = random.choice(JOB_QUERIES)
-    asyncio.run(auto_save_login_state())
+    # asyncio.run(auto_save_login_state())
     for queries in JOB_QUERIES:
         for query, role in queries:
             asyncio.run(run_single_scrape(query, role))
