@@ -19,4 +19,4 @@ async def save_login_state():
         await browser.close()
 
 
-asyncio.run(auto_save_login_state())
+asyncio.run(save_login_state())

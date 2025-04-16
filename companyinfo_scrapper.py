@@ -152,7 +152,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
                 print("No access to company people page or empty results")
                 reason = "Page not found or access denied"
 
-                update_failed_companies(company_name, reason)
+                # update_failed_companies(company_name, reason)
 
                 return profiles
             
@@ -181,7 +181,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
             if not people_section:
                 print("Could not find people section")
                 reason = "Could not find people section"
-                update_failed_companies(company_name, reason)
+                # update_failed_companies(company_name, reason)
                 return profiles
                 
             print("Found people section. Starting to collect profiles...")
@@ -236,7 +236,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
                             print("No more results available")
                             break
                     profile_cards = page.query_selector_all("li.org-people-profile-card__profile-card-spacing")
-                    print(f"Found {len(profile_cards)} profile cards in this batch")
+                    # print(f"Found {len(profile_cards)} profile cards in this batch")
 
                 # Process current batch of profile cards
                 for card in profile_cards:
@@ -281,7 +281,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
                             'timestamp': int(time.time())
                         })
                         
-                        print(f"Found: {name} - {profile_url}")
+                        # print(f"Found: {name} - {profile_url}")
                         
                         # Stop if we've reached the maximum number of profiles
                         if len(collected_profiles) >= max_profiles:
@@ -291,7 +291,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
                         print(f"Error processing profile card: {str(e)}")
                         continue
                 
-                print(f"Collected {len(collected_profiles)} unique profiles so far")
+                # print(f"Collected {len(collected_profiles)} unique profiles so far")
                 
                 # If we have enough profiles, break the loop
               
@@ -338,7 +338,7 @@ def scrape_company_profiles(company_name, min_profiles=50, max_profiles=70):
                 print(f"Saved {len(profiles)} profiles to Supabase for company {company_name}")
                 if len(profiles) < 5:
                     reason = f"Insufficient profiles ({len(profiles)})"
-                    update_failed_companies(company_name, reason)
+                    # update_failed_companies(company_name, reason)
             else:
                 print(f"No profiles found for {company_name}")
                 
