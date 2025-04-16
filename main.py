@@ -4,6 +4,7 @@ import pytz
 from datetime import datetime, timedelta
 from linkedin_scrapper import scrape_linkedin_jobs, convert_posted_time_to_datetime, format_posted_time_local  # Reuse your defined scraper logic
 from companyinfo_scrapper import scrape_referral_profile 
+from createStateJson import auto_save_login_state
 
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -173,6 +174,7 @@ async def run_single_scrape(query, role_type):
 if __name__ == "__main__":
     # Single execution for cloud environments
     # queries = random.choice(JOB_QUERIES)
+    asyncio.run(auto_save_login_state())
     for queries in JOB_QUERIES:
         for query, role in queries:
             asyncio.run(run_single_scrape(query, role))

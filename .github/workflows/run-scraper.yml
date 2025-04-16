@@ -57,6 +57,12 @@ jobs:
       run: |
         echo "$LINKEDIN_SESSION" > state_main.json
         echo "LinkedIn session state created"
+    - name: Set LinkedIn Credentials
+      if: steps.random.outputs.run_job == 'true'
+      env:
+        LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
+        LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
+      run: echo "LinkedIn credentials loaded"
 
     - name: Run scraper
       if: steps.random.outputs.run_job == 'true'
@@ -65,3 +71,13 @@ jobs:
         SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       run: |
         python main.py
+        
+    - name: Commit updated session state
+      if: steps.random.outputs.run_job == 'true' && success()
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git pull origin main
+        git add state.json
+        git commit -m "🔄 Update LinkedIn session state"
+        git push origin main
