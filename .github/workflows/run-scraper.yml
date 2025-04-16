@@ -57,18 +57,14 @@ jobs:
       run: |
         echo "$LINKEDIN_SESSION" > state_main.json
         echo "LinkedIn session state created"
-    - name: Set LinkedIn Credentials
-      if: steps.random.outputs.run_job == 'true'
-      env:
-        LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
-        LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
-      run: echo "LinkedIn credentials loaded"
-
+ 
     - name: Run scraper
       if: steps.random.outputs.run_job == 'true'
       env:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        LINKEDIN_EMAIL: ${{ secrets.LINKEDIN_EMAIL }}
+        LINKEDIN_PASSWORD: ${{ secrets.LINKEDIN_PASSWORD }}
       run: |
         python main.py
 
