@@ -8,7 +8,7 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-22.04
-    timeout-minutes: 55
+    # timeout-minutes: 55
     steps:
     - uses: actions/checkout@v4
 
@@ -71,7 +71,7 @@ jobs:
         SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
       run: |
         python main.py
-        
+
     - name: Commit updated session state
       if: steps.random.outputs.run_job == 'true' && success()
       run: |

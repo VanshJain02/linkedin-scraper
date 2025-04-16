@@ -2,8 +2,14 @@ import asyncio
 from playwright.async_api import async_playwright
 import os
 
+import sys
+
 LINKEDIN_EMAIL = os.getenv("LINKEDIN_EMAIL")
 LINKEDIN_PASSWORD = os.getenv("LINKEDIN_PASSWORD")
+
+if not LINKEDIN_EMAIL or not LINKEDIN_PASSWORD:
+    print("❌ LinkedIn credentials are missing. Did you set LINKEDIN_EMAIL and LINKEDIN_PASSWORD as env vars?")
+    sys.exit(1)
 
 async def auto_save_login_state():
     async with async_playwright() as p:
